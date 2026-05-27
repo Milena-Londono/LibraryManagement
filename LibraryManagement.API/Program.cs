@@ -1,4 +1,12 @@
 
+using LibraryManagement.API.Mappings;
+using LibraryManagement.DataAccess.Context;
+using LibraryManagement.DataAccess.Repositories;
+using LibraryManagement.Domain.Interfaces.Repositories;
+using LibraryManagement.Domain.Interfaces.Services;
+using LibraryManagement.Domain.Services;
+using Microsoft.EntityFrameworkCore;
+
 namespace LibraryManagement.API
 {
     public class Program
@@ -7,16 +15,46 @@ namespace LibraryManagement.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
+            // Add controllers to the API
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+            // Configure Swagger/OpenAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            // Configure AutoMapper
+            builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+            // Configure SQL Server connection
+            builder.Services.AddDbContext<LibraryDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            // Register repositories
+            builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<IBookRepository, BookRepository>();
+            builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+            builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+            builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+            builder.Services.AddScoped<ILoanRepository, LoanRepository>();
+            builder.Services.AddScoped<IFineRepository, FineRepository>();
+            builder.Services.AddScoped<ILibraryBranchRepository, LibraryBranchRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IBookAuthorRepository, BookAuthorRepository>();
+
+            // Register services
+            builder.Services.AddScoped<IBookService, BookService>();
+            builder.Services.AddScoped<IAuthorService, AuthorService>();
+            builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IMemberService, MemberService>();
+            builder.Services.AddScoped<ILoanService, LoanService>();
+            builder.Services.AddScoped<IFineService, FineService>();
+            builder.Services.AddScoped<ILibraryBranchService, LibraryBranchService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IBookAuthorService, BookAuthorService>();
+
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
+            // Enable Swagger only in development environment
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -26,7 +64,6 @@ namespace LibraryManagement.API
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
