@@ -10,4 +10,10 @@
     <ProjectReference Include="..\LibraryManagement.Domain\LibraryManagement.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Context\" />
+    <Folder Include="Seeders\" />
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
 </Project>

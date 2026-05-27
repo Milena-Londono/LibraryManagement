@@ -15,4 +15,12 @@
     <ProjectReference Include="..\LibraryManagement.Domain\LibraryManagement.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="DTOs\Response\" />
+    <Folder Include="DTOs\Request\" />
+    <Folder Include="Mappings\" />
+    <Folder Include="Middlewares\" />
+  </ItemGroup>
+
 </Project>
