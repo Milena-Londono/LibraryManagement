@@ -6,6 +6,7 @@ using LibraryManagement.Domain.Interfaces.Repositories;
 using LibraryManagement.Domain.Interfaces.Services;
 using LibraryManagement.Domain.Services;
 using Microsoft.EntityFrameworkCore;
+using LibraryManagement.DataAccess.Seeders;
 
 namespace LibraryManagement.API
 {
@@ -53,6 +54,13 @@ namespace LibraryManagement.API
             builder.Services.AddScoped<IBookAuthorService, BookAuthorService>();
 
             var app = builder.Build();
+
+            // Execute DataSeeder to populate initial data if the database is empty
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<LibraryDbContext>();
+                DataSeeder.SeedAsync(context).Wait();
+            }
 
             // Enable Swagger only in development environment
             if (app.Environment.IsDevelopment())
